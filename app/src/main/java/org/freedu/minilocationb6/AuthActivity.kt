@@ -4,8 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import org.freedu.minilocationb6.databinding.ActivityAuthBinding
@@ -33,11 +31,11 @@ class AuthActivity : AppCompatActivity() {
                 .addOnSuccessListener {
 
                     val userId = it.user!!.uid
-                    val user = User(userId, email)
+                    val user = AppUsers(userId, email)
 
                     db.collection("users").document(userId).set(user)
 
-                    startActivity(Intent(this, HomeActivity::class.java))
+                    startActivity(Intent(this, FriendListActivity::class.java))
                 }
         }
 
@@ -47,7 +45,7 @@ class AuthActivity : AppCompatActivity() {
 
             auth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
-                    startActivity(Intent(this, HomeActivity::class.java))
+                    startActivity(Intent(this, FriendListActivity::class.java))
                 }
         }
     }

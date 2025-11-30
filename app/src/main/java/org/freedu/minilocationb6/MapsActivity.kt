@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import org.freedu.minilocationb6.databinding.ActivityAuthBinding
 import org.freedu.minilocationb6.databinding.ActivityMapsBinding
+
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var binding: ActivityMapsBinding
@@ -36,8 +37,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
 
-        val userId = intent.getStringExtra("uid") ?: return
+        val showAll = intent.getBooleanExtra("showAll", false)
 
+        if (showAll) {
+            loadAllUsersOnMap()   // ← show all users
+        } else {
+            val userId = intent.getStringExtra("uid")
+            if (userId == null) {
+                Toast.makeText(this, "User ID not found", Toast.LENGTH_SHORT).show()
+                return
+            }
+            loadSingleUserLocation(userId) // ← single user
+        }
+    }
+
+    private fun loadSingleUserLocation(userId: String) {
         db.collection("users").document(userId).get()
             .addOnSuccessListener { doc ->
                 val lat = doc.getDouble("latitude")
@@ -45,24 +59,49 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 val username = doc.getString("username")
                 val email = doc.getString("email")
 
-                if (lat != null && lng != null) {
-                    val pos = LatLng(lat, lng)
-
-                    // Use username if available, else email
-                    val title = if (!username.isNullOrEmpty()) username else email ?: "User"
-
-                    map.addMarker(
-                        MarkerOptions()
-                            .position(pos)
-                            .title(title)
-                    )
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 16f))
-                } else {
+                if (lat == null || lng == null) {
                     Toast.makeText(this, "Location not available", Toast.LENGTH_SHORT).show()
+                    return@addOnSuccessListener
                 }
+
+                val pos = LatLng(lat, lng)
+                val title = username ?: email ?: "User"
+
+                map.addMarker(
+                    MarkerOptions().position(pos).title(title)
+                )
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 16f))
             }
-            .addOnFailureListener {
-                Toast.makeText(this, "Failed to load location", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun loadAllUsersOnMap() {
+        db.collection("users").get()
+            .addOnSuccessListener { result ->
+
+                for (doc in result) {
+                    val lat = doc.getDouble("latitude")
+                    val lng = doc.getDouble("longitude")
+                    val username = doc.getString("username")
+                    val email = doc.getString("email")
+
+                    if (lat != null && lng != null) {
+                        val pos = LatLng(lat, lng)
+                        val title = username ?: email ?: "User"
+
+                        map.addMarker(
+                            MarkerOptions().position(pos).title(title)
+                        )
+                    }
+                }
+
+                // Optional: Move camera to Bangladesh zoom out view
+                map.moveCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                        LatLng(23.777176, 90.399452),
+                        6f
+                    )
+                )
             }
     }
 }
+

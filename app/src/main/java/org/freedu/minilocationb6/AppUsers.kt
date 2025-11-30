@@ -1,6 +1,6 @@
 package org.freedu.minilocationb6
 
-data class User(
+data class AppUsers(
     val userId: String = "",
     val email: String = "",
     val username: String = "",

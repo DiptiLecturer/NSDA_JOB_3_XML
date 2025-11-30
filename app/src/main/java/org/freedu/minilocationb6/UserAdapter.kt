@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import org.freedu.minilocationb6.databinding.ItemUserBinding
 
 class UserAdapter(
-    private val userList: ArrayList<User>,
-    private val onItemClick: (User) -> Unit
+    private val userList: ArrayList<AppUsers>,
+    private val onItemClick: (AppUsers) -> Unit
 ) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     inner class UserViewHolder(val binding: ItemUserBinding) :
@@ -24,7 +24,7 @@ class UserAdapter(
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = userList[position]
 
-        if (user.username.isNotEmpty()) {
+        if (!user.username.isNullOrEmpty()) {
             holder.binding.tvUsername.text = user.username
             holder.binding.tvUsername.visibility = View.VISIBLE
         } else {
