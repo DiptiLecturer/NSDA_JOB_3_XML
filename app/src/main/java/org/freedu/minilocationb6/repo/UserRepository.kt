@@ -2,7 +2,7 @@ package org.freedu.minilocationb6.repo
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import org.freedu.minilocationb6.AppUsers
+import org.freedu.minilocationb6.Model.AppUsers
 
 class UserRepository {
 

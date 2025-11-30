@@ -1,24 +1,18 @@
-package org.freedu.minilocationb6
+package org.freedu.minilocationb6.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import org.freedu.minilocationb6.databinding.ActivityAuthBinding
+import org.freedu.minilocationb6.R
 import org.freedu.minilocationb6.databinding.ActivityMapsBinding
-import org.freedu.minilocationb6.repo.UserRepository
 import org.freedu.minilocationb6.viewModels.MapsViewModel
 import kotlin.getValue
 

@@ -6,6 +6,16 @@
     android:orientation="vertical"
     android:padding="20dp">
 
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Login/SignUp"
+        android:textAlignment="center"
+        android:textColor="#00B0FF"
+        android:textSize="34.sp"
+        android:textStyle="bold" />
+
     <EditText
         android:id="@+id/email"
         android:layout_width="match_parent"
@@ -29,8 +39,8 @@
         android:id="@+id/btnLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/black"
         android:layout_marginBottom="10dp"
+        android:backgroundTint="#00B0FF"
         android:text="Login"
         android:textColor="@color/white"
         android:textSize="24.sp" />
@@ -41,6 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="Register"
+        android:backgroundTint="#00E676"
         android:textColor="@color/white"
         android:textSize="24.sp" />
 

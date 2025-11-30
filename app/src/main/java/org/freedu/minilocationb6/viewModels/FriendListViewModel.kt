@@ -2,7 +2,7 @@ package org.freedu.minilocationb6.viewModels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.freedu.minilocationb6.AppUsers
+import org.freedu.minilocationb6.Model.AppUsers
 import org.freedu.minilocationb6.repo.UserRepository
 
 class FriendListViewModel(private val repo: UserRepository) : ViewModel() {

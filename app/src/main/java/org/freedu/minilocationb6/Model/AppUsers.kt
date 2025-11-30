@@ -1,4 +1,4 @@
-package org.freedu.minilocationb6
+package org.freedu.minilocationb6.Model
 
 data class AppUsers(
     val userId: String = "",
@@ -7,4 +7,3 @@ data class AppUsers(
     val latitude: Double? = null,
     val longitude: Double? = null
 )
-

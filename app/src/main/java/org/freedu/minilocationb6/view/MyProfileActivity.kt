@@ -1,4 +1,4 @@
-package org.freedu.minilocationb6
+package org.freedu.minilocationb6.view
 
 import android.Manifest
 import android.content.Intent
@@ -11,9 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import org.freedu.minilocationb6.databinding.ActivityMyProfileBinding
 import org.freedu.minilocationb6.repo.UserRepository

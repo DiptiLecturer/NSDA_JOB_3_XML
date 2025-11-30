@@ -1,42 +1,54 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="20dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="20dp">
 
     <TextView
+        android:textColor="#00B0FF"
         android:id="@+id/email"
-        android:textSize="20sp"
-        android:textStyle="bold"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="8.dp"
+        android:text="Your Email"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/edtUsername"
-        android:hint="Enter Username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:hint="Enter Username"
+        android:paddingHorizontal="8.dp"
+        android:textColor="@android:color/black" />
 
     <Button
         android:id="@+id/btnUpdateUsername"
-        android:text="Update Username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#2979FF"
+        android:text="Update Username"
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/btnShare"
-        android:text="Share My Location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/black"
+        android:text="Share My Location"
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/btnMap"
-        android:text="View Location on Map"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#2979FF"
+        android:text="View Location on Map"
+        android:textSize="18sp" />
 </LinearLayout>

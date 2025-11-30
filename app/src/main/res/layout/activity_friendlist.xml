@@ -1,63 +1,100 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="24dp"
     android:background="@color/white"
-    android:paddingHorizontal="10dp">
+    android:paddingHorizontal="16dp">
 
+    <!-- Header Title -->
+    <TextView
+        android:id="@+id/tvHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Friend List"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- RecyclerView below header -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/userRecycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingBottom="24dp"
+        app:layout_constraintTop_toBottomOf="@id/tvHeader"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- MINI FAB 1: My Profile -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabProfile"
+    <!-- FAB Container: vertical LinearLayout -->
+    <LinearLayout
+        android:id="@+id/fabContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="160dp"
-        android:contentDescription="Profile"
-        android:src="@drawable/ic_person"
-        android:visibility="gone" />
+        android:orientation="vertical"
+        android:gravity="end"
+        android:paddingBottom="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- MINI FAB 2: Show Users on Map -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabShowMap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="100dp"
-        android:contentDescription="Map"
-        android:src="@drawable/ic_map"
-        android:visibility="gone" />
+        <!-- MINI FAB 1: My Profile -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_person"
+            android:contentDescription="Profile"
+            android:backgroundTint="@android:color/white"
+            android:tint="@android:color/black"
+            android:visibility="gone"
+            app:fabSize="mini"
+            app:elevation="6dp"
+            android:layout_marginBottom="16dp"/>
 
-    <!-- MINI FAB 3: Logout -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="40dp"
-        android:contentDescription="Logout"
-        android:src="@drawable/ic_logout"
-        android:visibility="gone" />
+        <!-- MINI FAB 2: Show Users on Map -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabShowMap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_map"
+            android:contentDescription="Map"
+            android:backgroundTint="@android:color/white"
+            android:visibility="gone"
+            app:fabSize="mini"
+            app:elevation="6dp"
+            android:layout_marginBottom="16dp"/>
 
-    <!-- MAIN FAB -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabMain"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="20dp"
-        android:contentDescription="Menu"
-        android:src="@drawable/ic_dashboard" />
+        <!-- MINI FAB 3: Logout -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_logout"
+            android:contentDescription="Logout"
+            android:backgroundTint="@android:color/white"
+            android:tint="@android:color/black"
+            android:visibility="gone"
+            app:fabSize="mini"
+            app:elevation="6dp"
+            android:layout_marginBottom="16dp"/>
 
-</RelativeLayout>
+        <!-- MAIN FAB -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabMain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_dashboard"
+            android:contentDescription="Menu"
+            android:backgroundTint="@android:color/white"
+            android:tint="@android:color/black"
+            android:layout_marginBottom="34dp"
+            app:elevation="8dp"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

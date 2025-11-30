@@ -1,9 +1,9 @@
-package org.freedu.minilocationb6
+package org.freedu.minilocationb6.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import org.freedu.minilocationb6.Model.AppUsers
 import org.freedu.minilocationb6.databinding.ItemUserBinding
 
 class UserAdapter(
@@ -31,4 +31,3 @@ class UserAdapter(
 
     override fun getItemCount(): Int = userList.size
 }
-

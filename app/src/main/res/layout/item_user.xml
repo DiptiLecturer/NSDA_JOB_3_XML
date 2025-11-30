@@ -1,32 +1,58 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="14dp"
-    android:orientation="vertical"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    card_view:cardCornerRadius="12dp"
+    card_view:cardElevation="6dp"
+    card_view:cardBackgroundColor="@android:color/white">
 
-    <TextView
-        android:id="@+id/tvUsername"
-        android:text="Username"
-        android:textStyle="bold"
-        android:textSize="18sp"
+    <LinearLayout
+        android:padding="16dp"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tvEmail"
-        android:text="Email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tvUsername"
+            android:text="Username"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="#00B0FF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-    <TextView
-        android:id="@+id/tvLat"
-        android:text="Lat: "
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tvEmail"
+            android:text="Email"
+            android:textAlignment="textEnd"
+            android:textColor="#00838F"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"/>
 
-    <TextView
-        android:id="@+id/tvLng"
-        android:text="Long: "
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-</LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp">
+
+            <TextView
+                android:id="@+id/tvLat"
+                android:text="Lat: "
+                android:textColor="@android:color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tvLng"
+                android:text="Long: "
+                android:textColor="@android:color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

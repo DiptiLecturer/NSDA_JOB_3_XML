@@ -22,7 +22,7 @@
         android:theme="@style/Theme.MiniLocationB6">
 
         <activity
-            android:name=".MyProfileActivity"
+            android:name=".view.MyProfileActivity"
             android:exported="false" />
 
         <meta-data
@@ -30,23 +30,26 @@
             android:value="AIzaSyDIUYZVndYBOCs8Wk_bejGprfcR7aWHhtw" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".view.MapsActivity"
             android:exported="false" />
         <activity
-            android:name=".FriendListActivity"
+            android:name=".view.FriendListActivity"
             android:exported="false" />
         <activity
-            android:name=".AuthActivity"
+            android:name=".view.AuthActivity"
             android:exported="true">
+
+
+        </activity>
+        <activity
+            android:name=".view.MainActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivity"
-            android:exported="true" />
     </application>
 
 </manifest>

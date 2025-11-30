@@ -1,4 +1,4 @@
-package org.freedu.minilocationb6
+package org.freedu.minilocationb6.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,8 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import org.freedu.minilocationb6.view.AuthActivity
+import org.freedu.minilocationb6.Model.AppUsers
+import org.freedu.minilocationb6.adapter.UserAdapter
 import org.freedu.minilocationb6.databinding.ActivityFriendlistBinding
 import org.freedu.minilocationb6.repo.UserRepository
 import org.freedu.minilocationb6.viewModels.FriendListViewModel
