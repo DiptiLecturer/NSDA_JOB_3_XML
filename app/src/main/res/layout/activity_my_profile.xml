@@ -26,6 +26,7 @@
         android:textColor="@android:color/black" />
 
     <Button
+        android:textColor="@color/white"
         android:id="@+id/btnUpdateUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,6 +46,7 @@
         android:textSize="18sp" />
 
     <Button
+        android:textColor="@color/white"
         android:id="@+id/btnMap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

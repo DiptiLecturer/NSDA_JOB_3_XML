@@ -1,5 +1,10 @@
 package org.freedu.minilocationb6.repo
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import org.freedu.minilocationb6.Model.AppUsers
@@ -8,6 +13,30 @@ class UserRepository {
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
+
+    fun updateLocationAuto(context: Context, onComplete: (Boolean) -> Unit) {
+        val fused = LocationServices.getFusedLocationProviderClient(context)
+        val userId = auth.currentUser?.uid ?: return
+
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            onComplete(false)
+            return
+        }
+
+        fused.lastLocation.addOnSuccessListener { loc ->
+            if (loc != null) {
+                val lat = loc.latitude
+                val lng = loc.longitude
+                updateLocation(userId, lat, lng)
+                onComplete(true)
+            } else {
+                onComplete(false)
+            }
+        }
+    }
+
 
     fun registerUser(email: String, password: String, onComplete: (Boolean, String?) -> Unit) {
         auth.createUserWithEmailAndPassword(email, password)

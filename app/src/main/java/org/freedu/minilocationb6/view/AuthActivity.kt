@@ -30,13 +30,13 @@ class AuthActivity : AppCompatActivity() {
         binding.btnLogin.setOnClickListener {
             val email = binding.email.text.toString()
             val pass = binding.password.text.toString()
-            viewModel.login(email, pass)
+            viewModel.login(email, pass, this)
         }
 
         binding.btnRegister.setOnClickListener {
             val email = binding.email.text.toString()
             val pass = binding.password.text.toString()
-            viewModel.register(email, pass)
+            viewModel.register(email, pass, this)
         }
 
         viewModel.loginResult.observe(this) { (success, msg) ->
