@@ -36,6 +36,7 @@
 
     <Button
         android:id="@+id/btnShare"
+        android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
