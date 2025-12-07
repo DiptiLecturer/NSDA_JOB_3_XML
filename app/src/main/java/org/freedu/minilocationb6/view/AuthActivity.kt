@@ -40,13 +40,23 @@ class AuthActivity : AppCompatActivity() {
         }
 
         viewModel.loginResult.observe(this) { (success, msg) ->
-            if (success) startActivity(Intent(this, FriendListActivity::class.java))
-            else Toast.makeText(this, msg ?: "Login failed", Toast.LENGTH_SHORT).show()
+            if (success) {
+                // ✅ Send firstLogin flag
+                val intent = Intent(this, FriendListActivity::class.java)
+                intent.putExtra("firstLogin", true) // important!
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            } else Toast.makeText(this, msg ?: "Login failed", Toast.LENGTH_SHORT).show()
         }
 
         viewModel.registerResult.observe(this) { (success, msg) ->
-            if (success) startActivity(Intent(this, FriendListActivity::class.java))
-            else Toast.makeText(this, msg ?: "Registration failed", Toast.LENGTH_SHORT).show()
+            if (success) {
+                // ✅ Send firstLogin flag
+                val intent = Intent(this, FriendListActivity::class.java)
+                intent.putExtra("firstLogin", true) // important!
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            } else Toast.makeText(this, msg ?: "Registration failed", Toast.LENGTH_SHORT).show()
         }
     }
 }
