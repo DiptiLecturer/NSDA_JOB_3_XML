@@ -6,32 +6,130 @@
     android:background="@color/greenLight"
     android:paddingHorizontal="16dp">
 
-    <!-- Header -->
+    <!-- My Profile Header -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/layoutMyProfile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="6dp"
+        app:cardBackgroundColor="@color/greenPrimary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <!-- Title -->
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/tvMyProfileTitle"
+                android:text="My Profile"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <!-- Name -->
+                <TextView
+                    android:id="@+id/tvMyProfileName"
+                    android:text="Your Name"
+                    android:padding="3dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <!-- Email -->
+                <TextView
+                    android:id="@+id/tvMyProfileEmail"
+                    android:text="your@email.com"
+                    android:textSize="14sp"
+                    android:padding="3dp"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+
+
+
+            <!-- Lat / Lng Row -->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvMyProfileLat"
+                    android:text="Lat: 0.0"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:id="@+id/tvMyProfileLng"
+                    android:text="Lng: 0.0"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:layout_marginStart="16dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+
+    <!-- Friend List Header -->
     <TextView
-        android:id="@+id/tvHeader"
+        android:id="@+id/tvFriendListHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Friend List"
-        android:textSize="22sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@color/greenPrimaryDark"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/layoutMyProfile"
         app:layout_constraintStart_toStartOf="parent"/>
 
-    <!-- RecyclerView -->
+    <!-- RecyclerView for Friend List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/userRecycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:paddingBottom="24dp"
-        app:layout_constraintTop_toBottomOf="@id/tvHeader"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tvFriendListHeader"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- FAB Container -->
+    <!-- Floating Action Buttons -->
     <LinearLayout
         android:id="@+id/fabContainer"
         android:layout_width="wrap_content"
@@ -43,7 +141,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Profile -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabProfile"
             android:layout_width="wrap_content"
@@ -57,7 +154,6 @@
             app:rippleColor="@color/greenPrimaryDark"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Map -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabShowMap"
             android:layout_width="wrap_content"
@@ -71,7 +167,6 @@
             app:rippleColor="@color/greenPrimaryDark"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Logout -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabLogout"
             android:layout_width="wrap_content"
@@ -85,7 +180,6 @@
             app:rippleColor="@color/greenPrimaryDark"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Main Dashboard FAB -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabMain"
             android:layout_width="wrap_content"

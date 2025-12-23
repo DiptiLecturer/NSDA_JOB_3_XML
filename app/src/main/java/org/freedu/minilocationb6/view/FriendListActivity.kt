@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -13,14 +14,12 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.freedu.minilocationb6.view.AuthActivity
 import org.freedu.minilocationb6.Model.AppUsers
+import org.freedu.minilocationb6.R
 import org.freedu.minilocationb6.adapter.UserAdapter
 import org.freedu.minilocationb6.databinding.ActivityFriendlistBinding
 import org.freedu.minilocationb6.repo.UserRepository
 import org.freedu.minilocationb6.viewModels.FriendListViewModel
-import kotlin.getValue
-
 
 class FriendListActivity : AppCompatActivity() {
 
@@ -36,37 +35,77 @@ class FriendListActivity : AppCompatActivity() {
     private val userList = ArrayList<AppUsers>()
     private var isMenuOpen = false
 
+    // Header TextViews
+    private lateinit var tvMyProfileName: TextView
+    private lateinit var tvMyProfileEmail: TextView
+    private lateinit var tvMyProfileLat: TextView
+    private lateinit var tvMyProfileLng: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFriendlistBinding.inflate(layoutInflater)
         setContentView(binding.root)
         enableEdgeToEdge()
-        // 🔥 1. Check if this is first login
-        val isFirstLogin = intent.getBooleanExtra("firstLogin", false)
-        if (isFirstLogin) {
-            checkLocationPermission()
-        } else {
-            // 🔥 If permission already granted, update automatically
-            if (hasLocationPermission()) updateLocationAutomatically()
+
+        // Initialize header views
+        tvMyProfileName = binding.layoutMyProfile.findViewById(R.id.tvMyProfileName)
+        tvMyProfileEmail = binding.layoutMyProfile.findViewById(R.id.tvMyProfileEmail)
+        tvMyProfileLat = binding.layoutMyProfile.findViewById(R.id.tvMyProfileLat)
+        tvMyProfileLng = binding.layoutMyProfile.findViewById(R.id.tvMyProfileLng)
+
+        // Load current user info
+        loadCurrentUser()
+
+        // Make My Profile header clickable
+        binding.layoutMyProfile.setOnClickListener {
+            val uid = UserRepository().getCurrentUserId() ?: return@setOnClickListener
+            val email = UserRepository().getCurrentUserEmail() ?: ""
+            startActivity(Intent(this, MyProfileActivity::class.java).apply {
+                putExtra("uid", uid)
+                putExtra("email", email)
+            })
         }
 
+        // RecyclerView setup
         binding.userRecycler.layoutManager = LinearLayoutManager(this)
+        binding.userRecycler.setHasFixedSize(true)
 
+        // Load friend list (exclude current user)
         viewModel.fetchUsers()
-        setupMenu()
-
         viewModel.usersList.observe(this) { list ->
+            val currentUid = UserRepository().getCurrentUserId()
             userList.clear()
-            userList.addAll(list)
+            userList.addAll(list.filter { it.userId != currentUid })
             binding.userRecycler.adapter = UserAdapter(userList) { selectedUser ->
                 val intent = Intent(this, MapsActivity::class.java)
                 intent.putExtra("uid", selectedUser.userId)
                 startActivity(intent)
             }
         }
+
+        // FAB menu
+        setupMenu()
+
+        // Optional: location updates
+        val isFirstLogin = intent.getBooleanExtra("firstLogin", false)
+        if (isFirstLogin) checkLocationPermission()
+        else if (hasLocationPermission()) updateLocationAutomatically()
     }
 
-    //  Check if permission is already granted
+    /** Load current user info including lat/lng */
+    private fun loadCurrentUser() {
+        val uid = UserRepository().getCurrentUserId() ?: return
+        UserRepository().getUserById(uid) { user ->
+            user?.let {
+                tvMyProfileName.text = it.username.ifEmpty { "No Name" }
+                tvMyProfileEmail.text = it.email
+                tvMyProfileLat.text = "Lat: ${it.latitude ?: 0.0}"
+                tvMyProfileLng.text = "Lng: ${it.longitude ?: 0.0}"
+            }
+        }
+    }
+
+    // Location permission & updates
     private fun hasLocationPermission(): Boolean {
         return ActivityCompat.checkSelfPermission(
             this,
@@ -74,7 +113,6 @@ class FriendListActivity : AppCompatActivity() {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    //  Ask for permission
     private fun checkLocationPermission() {
         if (!hasLocationPermission()) {
             ActivityCompat.requestPermissions(
@@ -90,34 +128,23 @@ class FriendListActivity : AppCompatActivity() {
         }
     }
 
-    //  If permission is granted → auto update
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode == 200) {
-            if (grantResults.isNotEmpty() &&
-                grantResults[0] == PackageManager.PERMISSION_GRANTED
-            ) {
-                updateLocationAutomatically()
-            }
+        if (requestCode == 200 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            updateLocationAutomatically()
         }
     }
 
-    //  Auto update location using your repository function
     private fun updateLocationAutomatically() {
         UserRepository().updateLocationAuto(this) { success ->
-            if (!success) {
-                Toast.makeText(this, "Automatic location update failed!", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Location auto-updated", Toast.LENGTH_SHORT).show()
-            }
+            if (!success) Toast.makeText(this, "Automatic location update failed!", Toast.LENGTH_SHORT).show()
+            else loadCurrentUser() // refresh header
         }
     }
 
+    /** Setup floating menu */
     private fun setupMenu() {
         binding.fabMain.setOnClickListener { if (isMenuOpen) closeMenu() else openMenu() }
 
@@ -158,8 +185,3 @@ class FriendListActivity : AppCompatActivity() {
         isMenuOpen = false
     }
 }
-
-
-
-
-

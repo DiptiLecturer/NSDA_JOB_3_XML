@@ -9,11 +9,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import org.freedu.minilocationb6.Model.AppUsers
 
+
 class UserRepository {
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
+    // Update location automatically
     fun updateLocationAuto(context: Context, onComplete: (Boolean) -> Unit) {
         val fused = LocationServices.getFusedLocationProviderClient(context)
         val userId = auth.currentUser?.uid ?: return
@@ -37,7 +39,7 @@ class UserRepository {
         }
     }
 
-
+    // Register user
     fun registerUser(email: String, password: String, onComplete: (Boolean, String?) -> Unit) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener {
@@ -50,12 +52,14 @@ class UserRepository {
             .addOnFailureListener { e -> onComplete(false, e.message) }
     }
 
+    // Login user
     fun loginUser(email: String, password: String, onComplete: (Boolean, String?) -> Unit) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener { onComplete(true, null) }
             .addOnFailureListener { e -> onComplete(false, e.message) }
     }
 
+    // Fetch all users
     fun getAllUsers(onComplete: (List<AppUsers>) -> Unit) {
         db.collection("users").addSnapshotListener { value, _ ->
             val list = mutableListOf<AppUsers>()
@@ -64,18 +68,34 @@ class UserRepository {
         }
     }
 
+    // Update username
     fun updateUsername(userId: String, username: String, onComplete: (Boolean) -> Unit) {
         db.collection("users").document(userId).update("username", username)
             .addOnSuccessListener { onComplete(true) }
             .addOnFailureListener { onComplete(false) }
     }
 
+    // Update user location
     fun updateLocation(userId: String, lat: Double, lng: Double) {
         db.collection("users").document(userId)
             .update(mapOf("latitude" to lat, "longitude" to lng))
     }
 
+    // Fetch current user by ID (for header)
+    fun getUserById(userId: String, callback: (AppUsers?) -> Unit) {
+        db.collection("users").document(userId).get()
+            .addOnSuccessListener { doc ->
+                val user = doc.toObject(AppUsers::class.java)
+                callback(user)
+            }
+            .addOnFailureListener { callback(null) }
+    }
+
+    // Get current logged-in user info
     fun getCurrentUserId(): String? = auth.currentUser?.uid
     fun getCurrentUserEmail(): String? = auth.currentUser?.email
+
+    // Logout
     fun logout() = auth.signOut()
 }
+
