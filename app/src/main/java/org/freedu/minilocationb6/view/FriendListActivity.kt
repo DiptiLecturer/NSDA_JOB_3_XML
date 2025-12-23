@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -39,7 +40,7 @@ class FriendListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityFriendlistBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        enableEdgeToEdge()
         // 🔥 1. Check if this is first login
         val isFirstLogin = intent.getBooleanExtra("firstLogin", false)
         if (isFirstLogin) {
@@ -65,7 +66,7 @@ class FriendListActivity : AppCompatActivity() {
         }
     }
 
-    // 🔥 Check if permission is already granted
+    //  Check if permission is already granted
     private fun hasLocationPermission(): Boolean {
         return ActivityCompat.checkSelfPermission(
             this,
@@ -73,7 +74,7 @@ class FriendListActivity : AppCompatActivity() {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    // 🔥 Ask for permission
+    //  Ask for permission
     private fun checkLocationPermission() {
         if (!hasLocationPermission()) {
             ActivityCompat.requestPermissions(
@@ -89,7 +90,7 @@ class FriendListActivity : AppCompatActivity() {
         }
     }
 
-    // 🔥 If permission is granted → auto update
+    //  If permission is granted → auto update
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -106,7 +107,7 @@ class FriendListActivity : AppCompatActivity() {
         }
     }
 
-    // 🔥 Auto update location using your repository function
+    //  Auto update location using your repository function
     private fun updateLocationAutomatically() {
         UserRepository().updateLocationAuto(this) { success ->
             if (!success) {

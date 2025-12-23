@@ -3,10 +3,13 @@ package org.freedu.minilocationb6.view
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import org.freedu.minilocationb6.R
 import org.freedu.minilocationb6.databinding.ActivityAuthBinding
 import org.freedu.minilocationb6.repo.UserRepository
 import org.freedu.minilocationb6.viewModels.AuthViewModel
@@ -25,8 +28,10 @@ class AuthActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityAuthBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.greenPrimaryDark)
 
         binding.btnLogin.setOnClickListener {
             val email = binding.email.text.toString()
