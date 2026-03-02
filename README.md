@@ -29,13 +29,6 @@ This project is built using the **MVVM (Model-View-ViewModel)** pattern to ensur
 
 ---
 
-## 📸 App Preview
-| Auth / Login | Friend List | Google Map View |
-| :---: | :---: | :---: |
-| ![Auth](https://via.placeholder.com/200x400) | ![List](https://via.placeholder.com/200x400) | ![Map](https://via.placeholder.com/200x400) |
-
----
-
 ## ⚙️ Setup & Installation
 To run this project locally, follow these steps:
 
