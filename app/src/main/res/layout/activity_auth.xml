@@ -1,10 +1,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/greenLight"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="20dp">
+
 
     <TextView
         android:id="@+id/tvTitle"
@@ -56,4 +59,5 @@
         android:textColor="@color/white"
         android:textSize="18sp"
         android:backgroundTint="@color/greenAccent"/>
+
 </LinearLayout>

@@ -24,6 +24,7 @@ import org.freedu.minilocationb6.viewModels.FriendListViewModel
 class FriendListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFriendlistBinding
+
     private val viewModel by viewModels<FriendListViewModel> {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {

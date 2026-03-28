@@ -94,7 +94,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
-        // No marker clicks — info window only shows title
+
     }
 }
 
