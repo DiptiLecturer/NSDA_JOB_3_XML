@@ -1,6 +1,7 @@
 package org.freedu.minilocationb6.view
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -21,6 +22,7 @@ import org.freedu.minilocationb6.databinding.ActivityFriendlistBinding
 import org.freedu.minilocationb6.repo.UserRepository
 import org.freedu.minilocationb6.viewModels.FriendListViewModel
 
+
 class FriendListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFriendlistBinding
@@ -36,23 +38,11 @@ class FriendListActivity : AppCompatActivity() {
     private val userList = ArrayList<AppUsers>()
     private var isMenuOpen = false
 
-    // Header TextViews
-    private lateinit var tvMyProfileName: TextView
-    private lateinit var tvMyProfileEmail: TextView
-    private lateinit var tvMyProfileLat: TextView
-    private lateinit var tvMyProfileLng: TextView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFriendlistBinding.inflate(layoutInflater)
         setContentView(binding.root)
         enableEdgeToEdge()
-
-        // Initialize header views
-        tvMyProfileName = binding.layoutMyProfile.findViewById(R.id.tvMyProfileName)
-        tvMyProfileEmail = binding.layoutMyProfile.findViewById(R.id.tvMyProfileEmail)
-        tvMyProfileLat = binding.layoutMyProfile.findViewById(R.id.tvMyProfileLat)
-        tvMyProfileLng = binding.layoutMyProfile.findViewById(R.id.tvMyProfileLng)
 
         // Load current user info
         loadCurrentUser()
@@ -94,14 +84,15 @@ class FriendListActivity : AppCompatActivity() {
     }
 
     /** Load current user info including lat/lng */
+    @SuppressLint("SetTextI18n")
     private fun loadCurrentUser() {
         val uid = UserRepository().getCurrentUserId() ?: return
         UserRepository().getUserById(uid) { user ->
             user?.let {
-                tvMyProfileName.text = it.username.ifEmpty { "No Name" }
-                tvMyProfileEmail.text = it.email
-                tvMyProfileLat.text = "Lat: ${it.latitude ?: 0.0}"
-                tvMyProfileLng.text = "Lng: ${it.longitude ?: 0.0}"
+                binding.tvMyProfileName.text = it.username.ifEmpty { "No Name" }
+                binding.tvMyProfileEmail.text = it.email
+                binding.tvMyProfileLat.text = "Lat: ${it.latitude ?: 0.0}"
+                binding.tvMyProfileLng.text = "Lng: ${it.longitude ?: 0.0}"
             }
         }
     }
@@ -184,5 +175,10 @@ class FriendListActivity : AppCompatActivity() {
         binding.fabShowMap.visibility = View.GONE
         binding.fabLogout.visibility = View.GONE
         isMenuOpen = false
+    }
+
+    /** Optional: enable edge-to-edge (status/navigation bars transparent) */
+    private fun enableEdgeToEdge() {
+        // Optional: implement if you want immersive UI
     }
 }
