@@ -1,35 +1,39 @@
 package org.freedu.minilocationb6.viewModels
 
+import android.app.Application
 import android.content.Context
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.freedu.minilocationb6.repo.UserRepository
 
-class AuthViewModel(private val repo: UserRepository) : ViewModel() {
+class AuthViewModel(
+    private val app: Application,
+    private val repo: UserRepository
+) : AndroidViewModel(app) {
 
-    val loginResult = MutableLiveData<Pair<Boolean, String?>>()
-    val registerResult = MutableLiveData<Pair<Boolean, String?>>()
-    val locationUpdated = MutableLiveData<Boolean>()
+    private val _loginResult = MutableLiveData<Pair<Boolean, String?>>()
+    val loginResult: LiveData<Pair<Boolean, String?>> get() = _loginResult
 
-    fun login(email: String, password: String, context: Context) {
+    private val _registerResult = MutableLiveData<Pair<Boolean, String?>>()
+    val registerResult: LiveData<Pair<Boolean, String?>> get() = _registerResult
+
+    fun login(email: String, password: String) {
         repo.loginUser(email, password) { success, msg ->
             if (success) {
-                repo.updateLocationAuto(context) {
-                    locationUpdated.value = it
-                }
+                repo.updateLocationAuto(app) { /* silent, FriendListActivity handles it */ }
             }
-            loginResult.value = success to msg
+            _loginResult.postValue(success to msg)
         }
     }
 
-    fun register(email: String, password: String, context: Context) {
+    fun register(email: String, password: String) {
         repo.registerUser(email, password) { success, msg ->
             if (success) {
-                repo.updateLocationAuto(context) {
-                    locationUpdated.value = it
-                }
+                repo.updateLocationAuto(app) { }
             }
-            registerResult.value = success to msg
+            _registerResult.postValue(success to msg)
         }
     }
 }

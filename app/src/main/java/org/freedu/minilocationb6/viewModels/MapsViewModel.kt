@@ -9,7 +9,7 @@ import org.freedu.minilocationb6.repo.UserRepository
 
 
 
-class MapsViewModel(private val db: FirebaseFirestore) : ViewModel() {
+class MapsViewModel(private val repo: UserRepository) : ViewModel() {
 
     private val _singleUser = MutableLiveData<AppUsers?>()
     val singleUser: LiveData<AppUsers?> get() = _singleUser
@@ -18,18 +18,15 @@ class MapsViewModel(private val db: FirebaseFirestore) : ViewModel() {
     val allUsers: LiveData<List<AppUsers>> get() = _allUsers
 
     fun loadSingleUser(userId: String) {
-        db.collection("users").document(userId).get()
-            .addOnSuccessListener { doc ->
-                _singleUser.value = doc.toObject(AppUsers::class.java)
-            }
+        repo.getUserById(userId) { user ->
+            _singleUser.postValue(user)
+        }
     }
 
     fun loadAllUsers() {
-        db.collection("users").get()
-            .addOnSuccessListener { snapshot ->
-                val list = snapshot.documents.mapNotNull { it.toObject(AppUsers::class.java) }
-                _allUsers.value = list
-            }
+        repo.getAllUsers { list ->
+            _allUsers.postValue(list)
+        }
     }
 }
 

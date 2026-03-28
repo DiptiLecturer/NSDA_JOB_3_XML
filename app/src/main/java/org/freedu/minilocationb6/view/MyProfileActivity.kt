@@ -39,31 +39,49 @@ class MyProfileActivity : AppCompatActivity() {
         binding = ActivityMyProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        selectedUserId = intent.getStringExtra("uid")!!
-        selectedEmail = intent.getStringExtra("email")!!
+        // Safe — no !! crash
+        selectedUserId = intent.getStringExtra("uid") ?: run { finish(); return }
+        selectedEmail = intent.getStringExtra("email") ?: ""
 
         binding.email.text = selectedEmail
-        if (UserRepository().getCurrentUserId() != selectedUserId) binding.btnShare.visibility = View.GONE
 
-        FirebaseFirestore.getInstance().collection("users").document(selectedUserId)
-            .get().addOnSuccessListener { doc ->
-                binding.edtUsername.setText(doc.getString("username") ?: "")
+        if (UserRepository().getCurrentUserId() != selectedUserId) {
+            binding.btnShare.visibility = View.GONE
+        }
+
+        // Load user via ViewModel — no raw Firestore in Activity
+        viewModel.loadUser(selectedUserId)
+        viewModel.user.observe(this) { user ->
+            binding.edtUsername.setText(user?.username ?: "")
+        }
+
+        // Fix: updateResult observer handles navigation
+        viewModel.usernameUpdateResult.observe(this) { success ->
+            if (success) {
+                Toast.makeText(this, "Username updated!", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, FriendListActivity::class.java).apply {
+                    putExtra("uid", selectedUserId)
+                })
+                finish()
+            } else {
+                Toast.makeText(this, "Update failed", Toast.LENGTH_SHORT).show()
             }
+        }
 
         binding.btnUpdateUsername.setOnClickListener {
             val username = binding.edtUsername.text.toString()
-            if (username.isNotEmpty()) viewModel.updateUsername(selectedUserId, username)
-            startActivity(Intent(this, FriendListActivity::class.java).apply { putExtra("uid", selectedUserId) })
-            finish()
-        }
-
-        viewModel.usernameUpdateResult.observe(this) { success ->
-            if (success) Toast.makeText(this, "Username updated!", Toast.LENGTH_SHORT).show()
-            else Toast.makeText(this, "Update failed", Toast.LENGTH_SHORT).show()
+            if (username.isEmpty()) {
+                Toast.makeText(this, "Username cannot be empty", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            // Fix: navigation now happens inside the observer above
+            viewModel.updateUsername(selectedUserId, username)
         }
 
         binding.btnMap.setOnClickListener {
-            startActivity(Intent(this, MapsActivity::class.java).apply { putExtra("uid", selectedUserId) })
+            startActivity(Intent(this, MapsActivity::class.java).apply {
+                putExtra("uid", selectedUserId)
+            })
         }
 
         binding.btnShare.setOnClickListener { shareMyLocation() }

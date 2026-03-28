@@ -27,67 +27,70 @@ class FriendListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFriendlistBinding
 
+    // Single repo instance — no more UserRepository() scattered everywhere
+    private val repo = UserRepository()
+
     private val viewModel by viewModels<FriendListViewModel> {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return FriendListViewModel(UserRepository()) as T
+                return FriendListViewModel(repo) as T
             }
         }
     }
 
-    private val userList = ArrayList<AppUsers>()
     private var isMenuOpen = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityFriendlistBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        enableEdgeToEdge()
 
-        // Load current user info
+        // Load current user info into header
         loadCurrentUser()
 
         // Make My Profile header clickable
         binding.layoutMyProfile.setOnClickListener {
-            val uid = UserRepository().getCurrentUserId() ?: return@setOnClickListener
-            val email = UserRepository().getCurrentUserEmail() ?: ""
+            val uid = repo.getCurrentUserId() ?: return@setOnClickListener
+            val email = repo.getCurrentUserEmail() ?: ""
             startActivity(Intent(this, MyProfileActivity::class.java).apply {
                 putExtra("uid", uid)
                 putExtra("email", email)
             })
         }
 
+        // Create adapter ONCE
+        val adapter = UserAdapter { selectedUser ->
+            startActivity(Intent(this, MapsActivity::class.java).apply {
+                putExtra("uid", selectedUser.userId)
+            })
+        }
+
         // RecyclerView setup
         binding.userRecycler.layoutManager = LinearLayoutManager(this)
         binding.userRecycler.setHasFixedSize(true)
+        binding.userRecycler.adapter = adapter
 
-        // Load friend list (exclude current user)
+        // Observer just submits new data — no adapter recreation
         viewModel.fetchUsers()
         viewModel.usersList.observe(this) { list ->
-            val currentUid = UserRepository().getCurrentUserId()
-            userList.clear()
-            userList.addAll(list.filter { it.userId != currentUid })
-            binding.userRecycler.adapter = UserAdapter(userList) { selectedUser ->
-                val intent = Intent(this, MapsActivity::class.java)
-                intent.putExtra("uid", selectedUser.userId)
-                startActivity(intent)
-            }
+            val currentUid = repo.getCurrentUserId()
+            adapter.submitList(list.filter { it.userId != currentUid })
         }
 
         // FAB menu
         setupMenu()
 
-        // Optional: location updates
+        // Location updates
         val isFirstLogin = intent.getBooleanExtra("firstLogin", false)
         if (isFirstLogin) checkLocationPermission()
         else if (hasLocationPermission()) updateLocationAutomatically()
     }
 
-    /** Load current user info including lat/lng */
     @SuppressLint("SetTextI18n")
     private fun loadCurrentUser() {
-        val uid = UserRepository().getCurrentUserId() ?: return
-        UserRepository().getUserById(uid) { user ->
+        val uid = repo.getCurrentUserId() ?: return
+        repo.getUserById(uid) { user ->
             user?.let {
                 binding.tvMyProfileName.text = it.username.ifEmpty { "No Name" }
                 binding.tvMyProfileEmail.text = it.email
@@ -97,7 +100,6 @@ class FriendListActivity : AppCompatActivity() {
         }
     }
 
-    // Location permission & updates
     private fun hasLocationPermission(): Boolean {
         return ActivityCompat.checkSelfPermission(
             this,
@@ -124,25 +126,29 @@ class FriendListActivity : AppCompatActivity() {
         requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 200 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == 200
+            && grantResults.isNotEmpty()
+            && grantResults[0] == PackageManager.PERMISSION_GRANTED
+        ) {
             updateLocationAutomatically()
         }
     }
 
     private fun updateLocationAutomatically() {
-        UserRepository().updateLocationAuto(this) { success ->
+        repo.updateLocationAuto(this) { success ->
             if (!success) Toast.makeText(this, "Automatic location update failed!", Toast.LENGTH_SHORT).show()
-            else loadCurrentUser() // refresh header
+            else loadCurrentUser()
         }
     }
 
-    /** Setup floating menu */
     private fun setupMenu() {
-        binding.fabMain.setOnClickListener { if (isMenuOpen) closeMenu() else openMenu() }
+        binding.fabMain.setOnClickListener {
+            if (isMenuOpen) closeMenu() else openMenu()
+        }
 
         binding.fabProfile.setOnClickListener {
-            val uid = UserRepository().getCurrentUserId() ?: return@setOnClickListener
-            val email = UserRepository().getCurrentUserEmail() ?: ""
+            val uid = repo.getCurrentUserId() ?: return@setOnClickListener
+            val email = repo.getCurrentUserEmail() ?: ""
             startActivity(Intent(this, MyProfileActivity::class.java).apply {
                 putExtra("uid", uid)
                 putExtra("email", email)
@@ -151,7 +157,9 @@ class FriendListActivity : AppCompatActivity() {
         }
 
         binding.fabShowMap.setOnClickListener {
-            startActivity(Intent(this, MapsActivity::class.java).apply { putExtra("showAll", true) })
+            startActivity(Intent(this, MapsActivity::class.java).apply {
+                putExtra("showAll", true)
+            })
             closeMenu()
         }
 
@@ -161,6 +169,13 @@ class FriendListActivity : AppCompatActivity() {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             })
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Reset menu state so it doesn't get out of sync after returning from another screen
+        isMenuOpen = false
+        closeMenu()
     }
 
     private fun openMenu() {
@@ -177,7 +192,6 @@ class FriendListActivity : AppCompatActivity() {
         isMenuOpen = false
     }
 
-    /** Optional: enable edge-to-edge (status/navigation bars transparent) */
     private fun enableEdgeToEdge() {
         // Optional: implement if you want immersive UI
     }

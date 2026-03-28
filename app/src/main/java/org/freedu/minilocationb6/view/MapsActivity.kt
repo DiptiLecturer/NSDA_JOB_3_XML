@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -13,20 +15,23 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import org.freedu.minilocationb6.R
 import org.freedu.minilocationb6.databinding.ActivityMapsBinding
+import org.freedu.minilocationb6.repo.UserRepository
 import org.freedu.minilocationb6.viewModels.MapsViewModel
 import kotlin.getValue
-
-
-import org.freedu.minilocationb6.viewModels.MapsViewModelFactory
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var binding: ActivityMapsBinding
     private lateinit var map: GoogleMap
 
-    // Use ViewModel with Factory
-    private val db = FirebaseFirestore.getInstance()
-    private val viewModel: MapsViewModel by viewModels { MapsViewModelFactory(db) }
+
+    // Replace the viewModel line with:
+    private val viewModel by viewModels<MapsViewModel> {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                MapsViewModel(UserRepository()) as T
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +55,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             viewModel.loadSingleUser(userId)
         } else {
             Toast.makeText(this, "User ID not found", Toast.LENGTH_SHORT).show()
+            finish()
         }
 
         // Observe single user
@@ -86,8 +92,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 // Center map to Bangladesh with zoom out view
                 map.moveCamera(
                     CameraUpdateFactory.newLatLngZoom(
-                        LatLng(23.7548467, 90.3765373), // Dhaka coordinates
-                        16f
+                        LatLng(23.7548467, 90.3765373),
+                        6f   // ← was 16f, now shows all of Bangladesh
                     )
                 )
 

@@ -7,3 +7,7 @@ data class AppUsers(
     val latitude: Double? = null,
     val longitude: Double? = null
 )
+{
+    // Required for Firestore deserialization via reflection
+    constructor() : this("", "", "", null, null)
+}

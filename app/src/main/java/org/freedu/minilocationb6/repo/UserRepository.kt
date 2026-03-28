@@ -42,8 +42,11 @@ class UserRepository {
     // Register user
     fun registerUser(email: String, password: String, onComplete: (Boolean, String?) -> Unit) {
         auth.createUserWithEmailAndPassword(email, password)
-            .addOnSuccessListener {
-                val userId = it.user!!.uid
+            .addOnSuccessListener { result ->
+                val userId = result.user?.uid ?: run {
+                    onComplete(false, "User creation failed")
+                    return@addOnSuccessListener
+                }
                 val user = AppUsers(userId, email)
                 db.collection("users").document(userId).set(user)
                     .addOnSuccessListener { onComplete(true, null) }
@@ -61,11 +64,14 @@ class UserRepository {
 
     // Fetch all users
     fun getAllUsers(onComplete: (List<AppUsers>) -> Unit) {
-        db.collection("users").addSnapshotListener { value, _ ->
-            val list = mutableListOf<AppUsers>()
-            value?.forEach { doc -> list.add(doc.toObject(AppUsers::class.java)) }
-            onComplete(list)
-        }
+        db.collection("users").get()
+            .addOnSuccessListener { snapshot ->
+                val list = snapshot.documents.mapNotNull { it.toObject(AppUsers::class.java) }
+                onComplete(list)
+            }
+            .addOnFailureListener {
+                onComplete(emptyList())
+            }
     }
 
     // Update username
@@ -76,9 +82,12 @@ class UserRepository {
     }
 
     // Update user location
-    fun updateLocation(userId: String, lat: Double, lng: Double) {
+    fun updateLocation(userId: String, lat: Double, lng: Double,
+                       onComplete: ((Boolean) -> Unit)? = null) {
         db.collection("users").document(userId)
             .update(mapOf("latitude" to lat, "longitude" to lng))
+            .addOnSuccessListener { onComplete?.invoke(true) }
+            .addOnFailureListener { onComplete?.invoke(false) }
     }
 
     // Fetch current user by ID (for header)
